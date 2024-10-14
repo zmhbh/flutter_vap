@@ -28,6 +28,9 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
     private val vapView: AnimView = AnimView(context)
     private var channel: MethodChannel
     private var methodResult: MethodChannel.Result? = null
+    private var imageProperties: Map<String, String> = HashMap<String, String>()
+    private var textProperties: Map<String, String> = HashMap<String, String>()
+
 
     init {
         vapView.setScaleType(ScaleType.FIT_CENTER)
@@ -76,16 +79,18 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
                  */
                 val srcTag = resource.tag
                 if (srcTag.isNotEmpty()) {
-                    val urlStr = "https://dbekpb58z4pug.cloudfront.net/img/5de243e0-8985-11ef-88a9-2971adb9b100.png?x-oss-process=image/resize,l_600"
-                    val url = URL(urlStr)
+                    val imageUrl = imageProperties[srcTag]
+                    if (imageUrl == null) {
+                        methodResult?.success(HashMap<String, String>().apply {
+                            put("status", "failure")
+                            put("errorMsg", "imageProperty $srcTag is missing")
+                        })
+                        return
+                    }
+                    val url = URL(imageUrl)
                     val image = BitmapFactory.decodeStream(url.openStream())
                     result(image)
 
-//                    val drawableId = if (head1Img) R.drawable.head1 else R.drawable.head2
-//                    head1Img = !head1Img
-//                    val options = BitmapFactory.Options()
-//                    options.inScaled = false
-//                    result(BitmapFactory.decodeResource(resources, drawableId, options))
                 } else {
                     result(null)
                 }
@@ -95,10 +100,18 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
              * 获取文字资源
              */
             override fun fetchText(resource: Resource, result: (String?) -> Unit) {
-                val str = "恭喜 No.${1000 + Random().nextInt(8999)}用户 升神"
                 val srcTag = resource.tag
                 if (srcTag.isNotEmpty()) { // 此tag是已经写入到动画配置中的tag
-                    result(str)
+                    val textStr = textProperties[srcTag]
+                    if (textStr == null) {
+                        methodResult?.success(HashMap<String, String>().apply {
+                            put("status", "failure")
+                            put("errorMsg", "textProperty $srcTag is missing")
+                        })
+                        return
+                    }
+
+                    result(textStr)
                 } else {
                     result(null)
                 }
@@ -111,6 +124,8 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
                 resources.forEach {
                     it.bitmap?.recycle()
                 }
+                imageProperties = HashMap<String, String>()
+                textProperties = HashMap<String, String>()
             }
         })
         channel = MethodChannel(binaryMessenger, "flutter_vap_controller")
@@ -135,6 +150,8 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
                 }
             }
             "playAsset" -> {
+               call.argument<Map<String, String>>("imageProperties")?.let { this.imageProperties = it }
+                call.argument<Map<String, String>>("textProperties")?.let { this.textProperties = it }
                 call.argument<String>("asset")?.let {
                     vapView.startPlay(mContext.assets, "flutter_assets/$it")
                 }

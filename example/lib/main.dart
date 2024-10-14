@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
                   CupertinoButton(
                     color: Colors.purple,
                     child: Text("asset play"),
-                    onPressed: () => _playAsset("static/demo.mp4"),
+                    onPressed: () => _playAsset("static/vapx.mp4"),
                   ),
                   CupertinoButton(
                     color: Colors.purple,
@@ -128,7 +128,14 @@ class _MyAppState extends State<MyApp> {
     if (asset == null) {
       return null;
     }
-    var res = await VapController.playAsset(asset);
+    var res = await VapController.playAsset(
+      asset,
+      imageProperties: {
+        "[sImg1]":
+            "https://dbekpb58z4pug.cloudfront.net/img/5de243e0-8985-11ef-88a9-2971adb9b100.png?x-oss-process=image/resize,l_600"
+      },
+      textProperties: {"[sTxt1]": "恭喜 No.7777用户 升神"},
+    );
     if (res!["status"] == "failure") {
       // showToast(res["errorMsg"]);
     }

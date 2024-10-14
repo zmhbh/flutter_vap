@@ -11,8 +11,16 @@ class VapController {
     return _channel.invokeMethod('playPath', {"path": path});
   }
 
-  static Future<Map<dynamic, dynamic>?> playAsset(String asset) {
-    return _channel.invokeMethod('playAsset', {"asset": asset});
+  static Future<Map<dynamic, dynamic>?> playAsset(
+    String asset, {
+    Map<String, String> imageProperties = const {},
+    Map<String, String> textProperties = const {},
+  }) {
+    return _channel.invokeMethod('playAsset', {
+      "asset": asset,
+      "imageProperties": imageProperties,
+      "textProperties": textProperties,
+    });
   }
 
   static stop() {
