@@ -77,23 +77,28 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
                  * 解析时由业务读取tag决定需要播放的内容是什么
                  * 比如：一个素材里需要显示多个头像，则需要定义多个不同的tag，表示不同位置，需要显示不同的头像，文字类似
                  */
-                val srcTag = resource.tag
-                if (srcTag.isNotEmpty()) {
-                    val imageUrl = imageProperties[srcTag]
-                    if (imageUrl == null) {
-                        methodResult?.success(HashMap<String, String>().apply {
-                            put("status", "failure")
-                            put("errorMsg", "imageProperty $srcTag is missing")
-                        })
-                        return
-                    }
-                    val url = URL(imageUrl)
-                    val image = BitmapFactory.decodeStream(url.openStream())
-                    result(image)
+                try{
+                    val srcTag = resource.tag
+                    if (srcTag.isNotEmpty()) {
+                        val imageUrl = imageProperties[srcTag]
+                        if (imageUrl == null) {
+                            methodResult?.success(HashMap<String, String>().apply {
+                                put("status", "failure")
+                                put("errorMsg", "imageProperty $srcTag is missing")
+                            })
+                            return
+                        }
+                        val url = URL(imageUrl)
+                        val image = BitmapFactory.decodeStream(url.openStream())
+                        result(image)
 
-                } else {
+                    } else {
+                        result(null)
+                    }
+                }catch (e: Exception){
                     result(null)
                 }
+
             }
 
             /**
