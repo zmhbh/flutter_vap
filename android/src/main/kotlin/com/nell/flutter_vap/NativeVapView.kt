@@ -18,8 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
-import java.net.URL
-import java.util.Random
 
 
 internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context, id: Int, creationParams: Map<String?, Any?>?) : MethodChannel.MethodCallHandler, PlatformView {
@@ -80,16 +78,20 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
                 try{
                     val srcTag = resource.tag
                     if (srcTag.isNotEmpty()) {
-                        val imageUrl = imageProperties[srcTag]
-                        if (imageUrl == null) {
+                        val imageCachePath = imageProperties[srcTag]
+                        if (imageCachePath == null) {
                             methodResult?.success(HashMap<String, String>().apply {
                                 put("status", "failure")
                                 put("errorMsg", "imageProperty $srcTag is missing")
                             })
                             return
                         }
-                        val url = URL(imageUrl)
+
+                        val image = BitmapFactory.decodeFile(imageCachePath)
+                      /* the way of loading network image
+                        val url = URL(imageCachePath)
                         val image = BitmapFactory.decodeStream(url.openStream())
+                        */
                         result(image)
 
                     } else {
