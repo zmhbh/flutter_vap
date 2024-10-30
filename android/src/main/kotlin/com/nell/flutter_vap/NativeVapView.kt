@@ -152,6 +152,8 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
         methodResult = result
         when (call.method) {
             "playPath" -> {
+                call.argument<Map<String, String>>("imageProperties")?.let { this.imageProperties = it }
+                call.argument<Map<String, String>>("textProperties")?.let { this.textProperties = it }
                 call.argument<String>("path")?.let {
                     vapView.startPlay(File(it))
                 }
