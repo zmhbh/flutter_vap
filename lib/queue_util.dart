@@ -78,6 +78,8 @@ class QueueUtil {
     _taskList.removeAt(0);
     _isTaskRunning = false;
 
+    await Future.delayed(Duration(milliseconds: 200));
+
     /// 递归执行任务
     _doTask();
   }

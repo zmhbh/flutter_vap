@@ -147,10 +147,22 @@ class _MyAppState extends State<MyApp> {
   _queuePlay() async {
     // 模拟多个地方同时调用播放,使得队列执行播放。
     // Simultaneously call playback in multiple places, making the queue perform playback.
-    QueueUtil.get("vapQueue")
-        ?.addTask(() => VapController.playPath(downloadPathList[0]));
-    QueueUtil.get("vapQueue")
-        ?.addTask(() => VapController.playPath(downloadPathList[1]));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
+    QueueUtil.get("vapQueue")?.addTask(() => _playAsset("static/video.mp4"));
   }
 
   _cancelQueuePlay() {
